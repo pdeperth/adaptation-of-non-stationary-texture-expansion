@@ -5,6 +5,7 @@ import util.util as util
 from .base_model import BaseModel
 from . import networks
 import random
+import torch
 
 
 class TestModel(BaseModel):
@@ -34,7 +35,22 @@ class TestModel(BaseModel):
         self.image_paths = input['A_paths']
 
     def test(self):
+        print(type(self.input_A))
         self.real_A = Variable(self.input_A)
+        # self.real_A = self.input_A
+        self.fake_B = self.netG.forward(self.real_A)
+
+    def test_sample(self, fineSize):
+        L, C = self.input_A.shape[2], self.input_A.shape[3]
+        l = random.randint(0,L-fineSize)
+        c = random.randint(0,C-fineSize)
+        real_A = self.input_A[:,:,l:l+fineSize,c:c+fineSize]
+        # self2 = self.random_crop_256x256()
+        # # print(self2)
+        # real_A = torch.FloatTensor(self2['real_A'])
+        # real_A = real_A[0,:,:,:]
+        # print(real_A)
+        self.real_A = Variable(real_A)
         self.fake_B = self.netG.forward(self.real_A)
 
     # get image paths
@@ -143,7 +159,7 @@ class TestModel(BaseModel):
 
     def random_crop_256x256(self, crop_patch=6):
         input_size = self.input_A.cpu().shape
-        width, height = input_size[3], input_size[2]
+        width, height = input_size[-1], input_size[-2]
         results = []
         self.real_A = Variable(self.input_A, volatile=True)
         real_A_src = self.real_A.clone()
@@ -162,6 +178,29 @@ class TestModel(BaseModel):
             fake_B = util.tensor2im(self.fake_B.data)
             results.append(('256_real_{}_{}_{}_A'.format(i, rw, rh), real_A))
             results.append(('512_fake_{}_B'.format(i), fake_B))
+        return OrderedDict(results)
+
+    def random_crop_fineSize(self, fineSize, crop_patch=6):
+        input_size = self.input_A.cpu().shape
+        width, height = input_size[-1], input_size[-2]
+        results = []
+        self.real_A = Variable(self.input_A, volatile=True)
+        real_A_src = self.real_A.clone()
+        # self.fake_B = self.netG.forward(self.real_A)
+        # src_fake_B = self.fake_B.clone()
+        real_A = util.tensor2im(self.real_A.data)
+        # fake_B = util.tensor2im(self.fake_B.data)
+        results.append(('real_A', real_A))
+        # results.append(('fake_{}_B'.format('src'), fake_B))
+        for i in range(0, crop_patch):
+            rw = random.randint(0, width - fineSize)
+            rh = random.randint(0, height - fineSize)
+            self.real_A = Variable(real_A_src.data[:, :, rh:rh + fineSize, rw:rw + fineSize], volatile=True)
+            self.fake_B = self.netG.forward(self.real_A)
+            real_A = util.tensor2im(self.real_A.data)
+            fake_B = util.tensor2im(self.fake_B.data)
+            results.append(('fineSize_real_{}_{}_{}_A'.format(i, rw, rh), real_A))
+            results.append(('doublefinSize_fake_{}_B'.format(i), fake_B))
         return OrderedDict(results)
 
 

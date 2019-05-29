@@ -17,10 +17,11 @@ class InputGANModel(BaseModel):
 
     def initialize(self, opt):
         BaseModel.initialize(self, opt)
+        # self.save_dir = os.path.join(opt.checkpoints_dir, 'input_GAN', opt.name)
         self.isTrain = opt.isTrain
         # define tensors
         self.input_A = self.Tensor(opt.batchSize, opt.input_nc,
-                                   opt.fineSize, opt.fineSize)
+                                   int(opt.fineSize / 2), int(opt.fineSize / 2))
         self.input_B = self.Tensor(opt.batchSize, opt.output_nc,
                                    opt.fineSize, opt.fineSize)
 
@@ -92,7 +93,7 @@ class InputGANModel(BaseModel):
 
     # no backprop gradients
     def test(self):
-        self.real_A = Variable(self.input_A, volatile=True)
+        self.real_A = Variable(self.input_A, volatile=True)  #NOTE : changer pour no_grad() car volatile deprecie
         self.fake_B = self.netG.forward(self.real_A)
         self.real_B = Variable(self.input_B, volatile=True)
 
@@ -161,10 +162,10 @@ class InputGANModel(BaseModel):
     def get_current_errors(self):
         # print(self.pred_real)
         # print(self.pred_fake)
-        return OrderedDict([('G_GAN', self.loss_G_GAN.data[0]),
+        return OrderedDict([('G_GAN', self.loss_G_GAN.item()),
                             # ('G_L1', self.loss_G_L1.data[0]),
-                            ('D_real', self.loss_D_real.data[0]),
-                            ('D_fake', self.loss_D_fake.data[0]),
+                            ('D_real', self.loss_D_real.item()),
+                            ('D_fake', self.loss_D_fake.item()),
                             ('Style', self.style_loss_value)
                             ])
 
