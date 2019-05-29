@@ -1,3 +1,7 @@
+Note: main personal contributions to Zhen Zhu's code:
+- enabling learning from multiple images;
+- creating another GAN which learns to generate image patches from noise instead of a subpatch: this GAN is then used to generate input images that will be used by a previously trained half style GAN to produce new images with good diversity.
+
 # Non-stationary texture synthesis using adversarial expansions
 
 <img src='imgs/teaser.png' width="1200px"/>
