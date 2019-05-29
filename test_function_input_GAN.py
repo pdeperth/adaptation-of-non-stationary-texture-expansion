@@ -5,11 +5,14 @@ from data.data_loader import CreateDataLoader
 from models.models import create_model
 from util.visualizer import Visualizer
 from util import html
+from util import util
 import copy
 import random
+import torchvision.transforms as transforms
 
 # This function is used to testing during training. Results are stored in the opt.results_dir.
 # We do not need to run test script again.
+
 def test_func(opt_train, webpage, epoch='latest'):
 	opt = copy.deepcopy(opt_train)
 	print(opt)
@@ -41,7 +44,17 @@ def test_func(opt_train, webpage, epoch='latest'):
 	# for i, data in enumerate(dataset):
 	    # if i >= opt.how_many:
 	    #     break
-	i, data = random.choice(list(enumerate(dataset)))
+
+	noise = util.get_white_noise_image(opt.fineSize, opt.fineSize) # B_img.crop((rw, rh, int(rw + w/2), int(rh + h/2)))
+	noise = noise.convert('RGB')
+	transf1 = transforms.ToTensor()
+	transf2 = transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+	noise = transf2(transf1(noise))
+	i, data = list(enumerate(dataset))[0]
+	# print(data['A'].shape)
+	# print(noise.shape)
+	data['A'] = noise[None, :,:,:]
+
 	model.set_input(data)
 	model.test_sample(opt.fineSize)
 	# model.test()

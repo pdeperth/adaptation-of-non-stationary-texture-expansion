@@ -5,7 +5,7 @@ from models.models import create_model
 from util.visualizer import Visualizer
 from util import html
 import copy
-from test_function_several import test_func
+from test_function_input_GAN import test_func
 import os
 import random
 
@@ -14,13 +14,14 @@ data_loader = CreateDataLoader(opt)
 dataset = data_loader.load_data()
 dataset_size = len(data_loader)
 print('nb of training images = %d' % dataset_size)
+dataset = list(enumerate(dataset))
 
 model = create_model(opt)
 visualizer = Visualizer(opt)
 total_steps = 0
 
-opt.results_dir = os.path.join(os.path.dirname(opt.checkpoints_dir), 'results/input_GAN')
-web_dir = os.path.join(opt.results_dir, 'input_GAN', opt.name)
+opt.results_dir = os.path.join(os.path.dirname(opt.checkpoints_dir), 'results')
+web_dir = os.path.join(opt.results_dir, opt.name)
 webpage = html.HTML(web_dir, 'Experiment = %s' % (opt.name))
 
 
@@ -28,7 +29,8 @@ for epoch in range(opt.epoch_count, opt.niter + opt.niter_decay + 1):
     epoch_start_time = time.time()
     epoch_iter = 0
 
-    i, data = random.choice(list(enumerate(dataset)))
+    # i, data = random.choice(list(enumerate(dataset)))
+    i, data = random.choice(dataset)
     # for i, data in enumerate(dataset):
     # if epoch == 1:
     #     save_data = data
@@ -54,7 +56,8 @@ for epoch in range(opt.epoch_count, opt.niter + opt.niter_decay + 1):
 
     if total_steps % opt.print_freq == 0:
         errors = model.get_current_errors()
-        t = (time.time() - iter_start_time) / opt.batchSize
+        t = (time.time() - epoch_start_time) / opt.batchSize
+        # t = (time.time() - iter_start_time) / opt.batchSize
         visualizer.print_current_errors(epoch, epoch_iter, errors, t)
         # if opt.display_id > 0:
         #     visualizer.plot_current_errors(epoch, float(epoch_iter)/dataset_size, opt, errors)

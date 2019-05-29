@@ -17,14 +17,12 @@ In SIGGRAPH 2018. (* equal contributions)
 
 ### Requirements
 
-This code is tested under Ubuntu 14.04 and 16.04. The total project can be well functioned under the following environment:
+This code is tested under Ubuntu 14.04 and 16.04. The total project can be well functioned under the following environment: 
 
-* python-2.7
+* python-2.7 
 * pytorch-0.3.0 with cuda correctly specified
 * cuda-8.0
 * other packages under python-2.7
-
-Note : il faut que les images fournies soient au moins de taille 256x256.
 
 ### Preparations
 
@@ -66,7 +64,7 @@ The dataset structure is recommended as:
 
 Inside the main folder, `train.py` is used to train a model as described in our paper. `test.py` is used to test with the original image(result is 2x the size of the input). `test_recurrent.py` is used for extreme expansions. `cnn-vis.py` is used to visualize the internal layers of our generator. The residual blocks visualization shown in our paper are generated through `cnn-vis.py`.
 
-In folder `data`, file `custom_dataset_data_loader` specified five dataset mode: `aligned`, `unaligned`, `single` and `half_crop`. Generally, we use `single` for testing and `half_crop` for training.
+In folder `data`, file `custom_dataset_data_loader` specified five dataset mode: `aligned`, `unaligned`, `single` and `half_crop`. Generally, we use `single` for testing and `half_crop` for training. 
 
 In folder `models`, two files are of great importance: `models.py` and `networks.py`, please carefully check it before using it. `half_gan_style.py` is the major model we use in our paper. Some utilities are implemented in `vgg.py`.
 
@@ -100,3 +98,5 @@ year = {2018},
 ### Acknowledgements
 
 The code is based on project [CycleGAN](https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix). We sincerely thank for their great work.
+
+

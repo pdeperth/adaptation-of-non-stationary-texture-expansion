@@ -13,7 +13,7 @@ opt.batchSize = 1  # test code only supports batchSize = 1
 opt.serial_batches = True  # no shuffle
 opt.no_flip = False # flip
 opt.no_rotation = False
-opt.dataroot = opt.dataroot + '/tiles'
+# opt.dataroot = opt.dataroot
 
 data_loader = CreateDataLoader(opt)
 dataset = data_loader.load_data()
@@ -33,10 +33,10 @@ for i in range(opt.how_many):
     # visuals = model.stress_test_up()
     # visuals = model.stress_test_up_center(step=1, crop_size=192)
     # visuals = model.random_crop()
-    visuals = model.random_crop_256x256()
+    visuals = model.random_crop_fineSize(opt.fineSize) # NOTE : modify this with fineSize instead
     #visuals = model.get_current_visuals()
     img_path = model.get_image_paths()
     print('process image... %s' % img_path)
-    visualizer.save_images(webpage, visuals, img_path)
+    visualizer.save_images(webpage, visuals, img_path, i)
 
 webpage.save()
