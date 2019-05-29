@@ -56,7 +56,7 @@ class InputDataset(BaseDataset):
         # rw = random.randint(0, int(w/2))
         # rh = random.randint(0, int(h/2))
 
-        A_img = util.get_white_noise_image(w, h) # B_img.crop((rw, rh, int(rw + w/2), int(rh + h/2)))
+        A_img = util.get_white_noise_image(int(w/2), int(h/2)) # B_img.crop((rw, rh, int(rw + w/2), int(rh + h/2)))
         A_img = A_img.convert('RGB')
 
         A_img = self.transform(A_img)
