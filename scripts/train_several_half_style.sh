@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+python train_several.py --dataroot ./datasets/half/435_cnrm_full_600 --name 435_cnrm_transf_600_half_style_14x14 --use_style --no_lsgan --padding_type replicate --model half_style --which_model_netG resnet_2x_6blocks --which_model_netD n_layers --n_layers_D 4 --which_direction AtoB --lambda_A 100 --dataset_mode half_crop --norm batch --pool_size 0 --resize_or_crop no --niter_decay 100000 --niter 200000 --save_epoch_freq 2000 --gpu_ids 0,1
